@@ -10,6 +10,7 @@
     <version>1.0</version>
     <modules>
         <module>eureka-server</module>
+        <module>auth-server</module>
     </modules>
 
     <parent>
