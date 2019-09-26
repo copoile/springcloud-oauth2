@@ -1,6 +1,19 @@
 spring:
   application:
     name: auth-server
+  redis:
+    host: 127.0.0.1
+    password:
+    port: 6379
+    timeout: 3000
+    lettuce:
+      pool:
+        max-idle: 8
+        max-active: 8
+        max-wait: -1ms
+        min-idle: 0
+
+
 server:
   port: 8001
 
@@ -10,3 +23,4 @@ eureka:
     serviceUrl:
       #配置服务中心(可配置多个,用逗号隔开)
       defaultZone: http://admin:admin@localhost:8000/eureka/
+
