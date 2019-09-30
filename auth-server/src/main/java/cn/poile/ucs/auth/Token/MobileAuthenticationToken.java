@@ -15,7 +15,7 @@ public class MobileAuthenticationToken extends AbstractAuthenticationToken {
     private Object credentials;
 
     public MobileAuthenticationToken(Object principal, Object credentials) {
-        super((Collection)null);
+        super(null);
         this.principal = principal;
         this.credentials = credentials;
         this.setAuthenticated(false);
@@ -50,6 +50,9 @@ public class MobileAuthenticationToken extends AbstractAuthenticationToken {
     @Override
     public void eraseCredentials() {
         super.eraseCredentials();
-        this.credentials = null;
     }
+
+
+
+
 }

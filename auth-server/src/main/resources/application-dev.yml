@@ -15,12 +15,12 @@ spring:
 
 
 server:
-  port: 8001
+  port: 8002
 
 #服务器发现注册配置
 eureka:
   client:
     serviceUrl:
       #配置服务中心(可配置多个,用逗号隔开)
-      defaultZone: http://admin:admin@localhost:8000/eureka/
+      defaultZone: http://admin:admin@localhost:8001/eureka/
 
