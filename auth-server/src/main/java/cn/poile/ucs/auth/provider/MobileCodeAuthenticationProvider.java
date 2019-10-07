@@ -1,13 +1,14 @@
 package cn.poile.ucs.auth.provider;
 
-import cn.poile.ucs.auth.Token.MobileAuthenticationToken;
+import cn.poile.ucs.auth.Token.MobileCodeAuthenticationToken;
 import cn.poile.ucs.auth.constant.RedisConstant;
 import cn.poile.ucs.auth.service.UserDetailsServiceImpl;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.context.MessageSource;
+import org.springframework.context.MessageSourceAware;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.*;
-import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.SpringSecurityMessageSource;
@@ -15,11 +16,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 /**
+ * 手机模式认证提供者，主要认证工作通过该类完成
  * @author: yaohw
  * @create: 2019-09-29 20:00
  **/
 @Log4j2
-public class MobileAuthenticationProvider implements AuthenticationProvider {
+public class MobileCodeAuthenticationProvider implements AuthenticationProvider, MessageSourceAware {
 
     private StringRedisTemplate stringRedisTemplate;
 
@@ -27,13 +29,21 @@ public class MobileAuthenticationProvider implements AuthenticationProvider {
 
     private MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 
+    /**
+     * 是否隐藏用户未发现异常，默认为true,为true返回的异常信息为BadCredentialsException
+     */
     private boolean hideUserNotFoundExceptions = true;
+
+    @Override
+    public void setMessageSource(MessageSource messageSource) {
+        this.messages = new MessageSourceAccessor(messageSource);
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String mobile = (String) authentication.getPrincipal();
         if (mobile == null) {
-            throw new BadCredentialsException(this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
+            throw new BadCredentialsException(this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Missing mobile"));
         }
         UserDetails user;
         try {
@@ -48,15 +58,17 @@ public class MobileAuthenticationProvider implements AuthenticationProvider {
         check(user);
         String code = (String) authentication.getCredentials();
         if (code == null) {
-            log.info("code null");
-            throw new BadCredentialsException(this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
+            log.info("缺失code参数");
+            throw new BadCredentialsException(this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Missing code"));
         }
         String cacheCode = stringRedisTemplate.opsForValue().get(RedisConstant.SMS_CODE_PREFIX + mobile);
         if (cacheCode == null || !cacheCode.equals(code)) {
             log.info("短信验证码错误");
-            throw new BadCredentialsException(this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
+            throw new BadCredentialsException(this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Invalid code"));
         }
-        MobileAuthenticationToken authenticationToken = new MobileAuthenticationToken(mobile, code, user.getAuthorities());
+        //清除redis中的短信验证码
+        //stringRedisTemplate.delete(RedisConstant.SMS_CODE_PREFIX + mobile);
+        MobileCodeAuthenticationToken authenticationToken = new MobileCodeAuthenticationToken(user, code, user.getAuthorities());
         authenticationToken.setDetails(authenticationToken.getDetails());
         return authenticationToken;
     }
@@ -68,7 +80,7 @@ public class MobileAuthenticationProvider implements AuthenticationProvider {
      */
     @Override
     public boolean supports(Class<?> aClass) {
-        return MobileAuthenticationToken.class.isAssignableFrom(aClass);
+        return MobileCodeAuthenticationToken.class.isAssignableFrom(aClass);
     }
 
     /**

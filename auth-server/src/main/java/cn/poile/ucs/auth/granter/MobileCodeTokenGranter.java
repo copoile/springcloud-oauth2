@@ -1,6 +1,6 @@
-package cn.poile.ucs.auth.provider;
+package cn.poile.ucs.auth.granter;
 
-import cn.poile.ucs.auth.Token.MobileAuthenticationToken;
+import cn.poile.ucs.auth.Token.MobileCodeAuthenticationToken;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
@@ -12,22 +12,23 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * 自定义grant_type模式-手机号短信验证模式
  * @author: yaohw
  * @create: 2019-09-29 18:29
  **/
-public class MobileTokenGranter extends AbstractTokenGranter {
+public class MobileCodeTokenGranter extends AbstractTokenGranter {
 
     private static final String GRANT_TYPE = "mobile";
 
     private final AuthenticationManager authenticationManager;
 
-    public MobileTokenGranter(AuthenticationManager authenticationManager,
-                              AuthorizationServerTokenServices tokenServices, ClientDetailsService clientDetailsService, OAuth2RequestFactory requestFactory) {
+    public MobileCodeTokenGranter(AuthenticationManager authenticationManager,
+                                  AuthorizationServerTokenServices tokenServices, ClientDetailsService clientDetailsService, OAuth2RequestFactory requestFactory) {
         this(authenticationManager, tokenServices, clientDetailsService, requestFactory, GRANT_TYPE);
     }
 
-    private MobileTokenGranter(AuthenticationManager authenticationManager, AuthorizationServerTokenServices tokenServices,
-                                 ClientDetailsService clientDetailsService, OAuth2RequestFactory requestFactory, String grantType) {
+    private MobileCodeTokenGranter(AuthenticationManager authenticationManager, AuthorizationServerTokenServices tokenServices,
+                                   ClientDetailsService clientDetailsService, OAuth2RequestFactory requestFactory, String grantType) {
         super(tokenServices, clientDetailsService, requestFactory, grantType);
         this.authenticationManager = authenticationManager;
     }
@@ -37,7 +38,7 @@ public class MobileTokenGranter extends AbstractTokenGranter {
         Map<String, String> parameters = new LinkedHashMap<String, String>(tokenRequest.getRequestParameters());
         String mobile = parameters.get("mobile");
         String code = parameters.get("code");
-        Authentication userAuth = new MobileAuthenticationToken(mobile,code);
+        Authentication userAuth = new MobileCodeAuthenticationToken(mobile,code);
         ((AbstractAuthenticationToken) userAuth).setDetails(parameters);
         try {
             userAuth = authenticationManager.authenticate(userAuth);

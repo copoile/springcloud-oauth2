@@ -7,6 +7,9 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 
 /**
+ * oauth2资源服务配置，这里可配置，也可不配置，
+ * 如果不配置，则该服务只为认证服务器，即不会请求进行安全校验
+ * 如果配置，则该服务既是认证服务器，也是资源服务器，会对请求进行安全校验
  * @author: yaohw
  * @create: 2019-09-26 15:22
  **/

@@ -6,22 +6,23 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Collection;
 
 /**
+ * 手机号短信认证Token
  * @author: yaohw
  * @create: 2019-09-29 19:56
  **/
-public class MobileAuthenticationToken extends AbstractAuthenticationToken {
+public class MobileCodeAuthenticationToken extends AbstractAuthenticationToken {
 
     private final Object principal;
     private Object credentials;
 
-    public MobileAuthenticationToken(Object principal, Object credentials) {
+    public MobileCodeAuthenticationToken(Object principal, Object credentials) {
         super(null);
         this.principal = principal;
         this.credentials = credentials;
         this.setAuthenticated(false);
     }
 
-    public MobileAuthenticationToken(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
+    public MobileCodeAuthenticationToken(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.principal = principal;
         this.credentials = credentials;
