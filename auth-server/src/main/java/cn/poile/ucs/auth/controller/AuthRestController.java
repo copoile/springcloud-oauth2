@@ -83,7 +83,7 @@ public class AuthRestController {
      * 认证页面
      * @return ModelAndView
      */
-    @GetMapping("/require")
+    @GetMapping("/login")
     public ModelAndView require() {
         log.info("认证页面");
         return new ModelAndView("ftl/login");

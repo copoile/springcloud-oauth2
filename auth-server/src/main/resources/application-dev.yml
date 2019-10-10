@@ -22,7 +22,7 @@ eureka:
   client:
     serviceUrl:
       #配置服务中心(可配置多个,用逗号隔开)
-      defaultZone: http://admin:admin@localhost:9000/eureka/
+      defaultZone: http://admin:admin@localhost:8000/eureka/
 
 ##开启日志DEBUG级别，便于查看调试信息
 logging.level.org.springframework.security: DEBUG

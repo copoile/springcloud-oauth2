@@ -19,12 +19,12 @@ import java.util.List;
 /**
  * @author: yaohw
  * @create: 2019-10-08 10:04
- **/
+ **//*
 @Configuration
 @EnableResourceServer
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@Log4j2
+@Log4j2*/
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     private static final String RESOURCE_ID = "auth-server";
