@@ -9,7 +9,4 @@ public class RedisConstant {
 
     public final static String SMS_CODE_PREFIX = "sms:code:";
 
-    public final static String OAUTH_PREFIX = "auth:oauth:";
-
-
 }

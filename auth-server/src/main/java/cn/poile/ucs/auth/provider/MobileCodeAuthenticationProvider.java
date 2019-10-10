@@ -41,10 +41,23 @@ public class MobileCodeAuthenticationProvider implements AuthenticationProvider,
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+
         String mobile = (String) authentication.getPrincipal();
         if (mobile == null) {
             throw new BadCredentialsException(this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Missing mobile"));
         }
+        String code = (String) authentication.getCredentials();
+        if (code == null) {
+            log.error("缺失code参数");
+            throw new BadCredentialsException(this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Missing code"));
+        }
+        String cacheCode = stringRedisTemplate.opsForValue().get(RedisConstant.SMS_CODE_PREFIX + mobile);
+        if (cacheCode == null || !cacheCode.equals(code)) {
+            log.error("短信验证码错误");
+            throw new BadCredentialsException(this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Invalid code"));
+        }
+        //清除redis中的短信验证码
+        //stringRedisTemplate.delete(RedisConstant.SMS_CODE_PREFIX + mobile);
         UserDetails user;
         try {
             user = userDetailsService.loadUserByMobile(mobile);
@@ -56,18 +69,6 @@ public class MobileCodeAuthenticationProvider implements AuthenticationProvider,
             throw var6;
         }
         check(user);
-        String code = (String) authentication.getCredentials();
-        if (code == null) {
-            log.info("缺失code参数");
-            throw new BadCredentialsException(this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Missing code"));
-        }
-        String cacheCode = stringRedisTemplate.opsForValue().get(RedisConstant.SMS_CODE_PREFIX + mobile);
-        if (cacheCode == null || !cacheCode.equals(code)) {
-            log.info("短信验证码错误");
-            throw new BadCredentialsException(this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Invalid code"));
-        }
-        //清除redis中的短信验证码
-        //stringRedisTemplate.delete(RedisConstant.SMS_CODE_PREFIX + mobile);
         MobileCodeAuthenticationToken authenticationToken = new MobileCodeAuthenticationToken(user, code, user.getAuthorities());
         authenticationToken.setDetails(authenticationToken.getDetails());
         return authenticationToken;

@@ -1,32 +1,29 @@
 package cn.poile.ucs.auth.controller;
 
-import cn.poile.ucs.auth.Token.MobileCodeAuthenticationToken;
-import cn.poile.ucs.auth.service.UserDetailsServiceImpl;
 import cn.poile.ucs.auth.util.UserDetailImpl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.token.TokenService;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.security.Principal;
 
 /**
  * @author: yaohw
  * @create: 2019-09-25 16:49
  **/
-@RestController
+@Controller
 @Log4j2
 public class AuthRestController {
 
@@ -39,11 +36,15 @@ public class AuthRestController {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    /**
+     * 更新用户信息时更新redis中的用户信息
+     * @param authentication
+     * @return java.lang.String
+     */
     @GetMapping("/update")
-    public String test(Authentication authentication) {
+    public @ResponseBody String updateCacheUserInfo(Authentication authentication) {
         if (authentication instanceof OAuth2Authentication) {
             OAuth2Authentication auth2Authentication = (OAuth2Authentication) authentication;
-            OAuth2Request oAuth2Request = auth2Authentication.getOAuth2Request();
             Authentication userAuthentication = auth2Authentication.getUserAuthentication();
             OAuth2Authentication newOAuth2Authentication = null;
             if (userAuthentication instanceof UsernamePasswordAuthenticationToken) {
@@ -58,25 +59,34 @@ public class AuthRestController {
                 tokenStore.storeAccessToken(accessToken,newOAuth2Authentication);
             }
         }
-
         return "ok";
     }
     @GetMapping("/user")
-    public UserDetailImpl test2(Authentication authentication) {
-        log.info("user:{}",authentication);
-        return  (UserDetailImpl)authentication.getPrincipal();
+    public @ResponseBody Object userInfo(Principal user) {
+        log.info("user:{}",user);
+        return  user;
     }
 
     @DeleteMapping("/logOut")
-    public String logOut(@RequestHeader(value = "Authorization") String token) {
-        String[] tokenArr = token.split(" ");
-        if (tokenArr.length!=2) {
-            return "error";
-        }
-        String accessToken = tokenArr[1];
+    public @ResponseBody String logOut(@RequestHeader(value = "Authorization") String authorization) {
+        String accessToken = authorization.substring(OAuth2AccessToken.BEARER_TYPE.length()).trim();
         consumerTokenServices.revokeToken(accessToken);
         return "ok";
     }
 
+    @GetMapping("/test")
+    public @ResponseBody String test() {
+        return "ok";
+    }
+
+    /**
+     * 认证页面
+     * @return ModelAndView
+     */
+    @GetMapping("/require")
+    public ModelAndView require() {
+        log.info("认证页面");
+        return new ModelAndView("ftl/login");
+    }
 
 }
