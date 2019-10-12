@@ -2,8 +2,8 @@ package cn.poile.ucs.resources.controller;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -14,11 +14,26 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 public class TestRestController {
 
-    @GetMapping("/t")
-    public Object est(Authentication authentication) {
-        log.info("{}",authentication);
-        Object principal = authentication.getPrincipal();
-        log.info("{}",principal);
-        return principal;
+
+    /**
+     * 不需要token访问测试
+     * @return
+     */
+    @GetMapping("/test/no_need_token")
+    public @ResponseBody String test() {
+        return "no_need_token";
     }
+
+    /**
+     * 需要需要token访问接口测试
+     * @return
+     */
+    @GetMapping("/test/need_token")
+    public @ResponseBody String test2(Authentication authentication) {
+        log.info("{}",authentication);
+        //由于自定义的principal返回的是包含全部user字段的map
+        Object principal = authentication.getPrincipal();
+        return "need_token";
+    }
+
 }
