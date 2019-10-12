@@ -1,8 +1,9 @@
 package cn.poile.ucs.auth.controller;
 
-import cn.poile.ucs.auth.util.UserDetailImpl;
+import cn.poile.ucs.auth.vo.UserDetailImpl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,7 +26,7 @@ import java.security.Principal;
  **/
 @Controller
 @Log4j2
-public class AuthRestController {
+public class AuthenticationController {
 
     @Autowired
     private ConsumerTokenServices consumerTokenServices;
@@ -61,22 +62,51 @@ public class AuthRestController {
         }
         return "ok";
     }
+
     @GetMapping("/user")
     public @ResponseBody Object userInfo(Principal user) {
         log.info("user:{}",user);
         return  user;
     }
 
-    @DeleteMapping("/logOut")
-    public @ResponseBody String logOut(@RequestHeader(value = "Authorization") String authorization) {
+    /**
+     * 退出时将token清空（使用RedisStore时就是删除掉对应缓存）
+     * @param authorization
+     * @return
+     */
+    @DeleteMapping("/logout")
+    public @ResponseBody String logout(@RequestHeader(value = "Authorization") String authorization) {
         String accessToken = authorization.substring(OAuth2AccessToken.BEARER_TYPE.length()).trim();
         consumerTokenServices.revokeToken(accessToken);
         return "ok";
     }
 
-    @GetMapping("/test")
+    /**
+     * 不需要token访问测试
+     * @return
+     */
+    @GetMapping("/test/no_need_token")
     public @ResponseBody String test() {
-        return "ok";
+        return "no_need_token";
+    }
+
+    /**
+     * 需要token访问接口测试
+     * @return
+     */
+    @GetMapping("/test/need_token")
+    public @ResponseBody String test2() {
+        return "need_token";
+    }
+
+    /**
+     * 需要需要管理员权限
+     * @return
+     */
+    @PreAuthorize("hasAuthority('admin')")
+    @GetMapping("/test/need_admin")
+    public @ResponseBody String admin() {
+        return "need_admin";
     }
 
     /**
@@ -85,7 +115,7 @@ public class AuthRestController {
      */
     @GetMapping("/login")
     public ModelAndView require() {
-        log.info("认证页面");
+        log.info("---认证页面---");
         return new ModelAndView("ftl/login");
     }
 

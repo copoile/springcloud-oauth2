@@ -22,8 +22,14 @@ public class RedisAuthorizationCodeServices extends RandomValueAuthorizationCode
 
     private static final String AUTHORIZATION_CODE = "authorization:code:";
 
+    /**
+     * 授权码有效时长
+     */
     private long expiration = 300L;
 
+    /**
+     * key 前缀
+     */
     private String prefix = "";
 
 
@@ -115,7 +121,7 @@ public class RedisAuthorizationCodeServices extends RandomValueAuthorizationCode
     }
 
     /**
-     * 取出授权码并删除授权码
+     * 取出授权码并删除授权码(权限码只能用一次，调试时可不删除，code就可多次使用)
      *
      * @param code
      * @return org.springframework.security.oauth2.provider.OAuth2Authentication
@@ -124,7 +130,7 @@ public class RedisAuthorizationCodeServices extends RandomValueAuthorizationCode
     protected OAuth2Authentication remove(String code) {
         byte[] serializedKey = serializeKey(AUTHORIZATION_CODE + code);
         RedisConnection conn = getConnection();
-        byte[] bytes = null;
+        byte[] bytes;
         try {
             bytes = conn.get(serializedKey);
             if (bytes != null) {

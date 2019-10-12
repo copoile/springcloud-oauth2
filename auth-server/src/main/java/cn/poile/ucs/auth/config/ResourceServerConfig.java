@@ -1,45 +1,39 @@
 package cn.poile.ucs.auth.config;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 
-import java.util.List;
-
 /**
+ * 资源服务配置
  * @author: yaohw
  * @create: 2019-10-08 10:04
- **//*
+ **/
 @Configuration
 @EnableResourceServer
-@EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@Log4j2*/
+@Log4j2
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     private static final String RESOURCE_ID = "auth-server";
 
-    @Autowired
-    private FilterIgnorePropertiesConfig filterIgnorePropertiesConfig;
 
-
+    /**
+     *  配置资源接口安全，http.authorizeRequests()针对的所有url，但是由于登录页面url包含在其中，这里配置会进行token校验，校验不通过返回错误json，
+     *  而授权码模式获取code时需要重定向登录页面，重定向过程并不能携带token，所有不能用，http.authorizeRequests()，
+     *  而是用.requestMatchers().antMatchers("")，这里配置的是需要资源接口拦截的url数组
+     * @param http
+     * @return void
+     */
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        List<String> urls = filterIgnorePropertiesConfig.getUrls();
-        int size = urls.size();
-        http.authorizeRequests()
-                .antMatchers(urls.toArray(new String[size])).permitAll()
-                .anyRequest().authenticated();
+        http    //配置需要保护的资源接口
+                .requestMatchers().antMatchers("/user","/test/need_token","/update","/logout","/test/need_admin")
+                .and().authorizeRequests().anyRequest().authenticated();
     }
 
 
