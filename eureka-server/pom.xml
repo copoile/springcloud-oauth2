@@ -7,8 +7,9 @@
         <groupId>cn.poile.ucs</groupId>
         <version>1.0</version>
     </parent>
+    <packaging>jar</packaging>
     <modelVersion>4.0.0</modelVersion>
-
+    <name>eureka-server</name>
     <artifactId>eureka-server</artifactId>
 
     <dependencies>
@@ -16,10 +17,20 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
         </dependency>
+       <!-- 这里配置的security跟本次的主题oauth2没有关联，这里加这个配置单纯的只是为了给注册中心添加安全配置，
+        要不然只要知道链接，谁都可以看到并用你的注册中心（非内网情况下）-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-security</artifactId>
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

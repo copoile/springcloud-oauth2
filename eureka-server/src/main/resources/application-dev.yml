@@ -6,11 +6,11 @@ spring:
   application:
     name: eureka-server
 server:
-  port: 8000
+  port: 9000
 
 eureka:
   client:
     registerWithEureka: false
     fetchRegistry: false
     serviceUrl:
-      defaultZone: http://admin:admin@localhost:${server.port}/eureka/
+      defaultZone: http://admin:admin@localhost:9000/eureka/
