@@ -5,6 +5,7 @@ springcloud-oauth2搭建基于springcloud-oauth2认证中心和资源服务器�
 认证中心完成密码模式、授权码模式、刷新token模式、简化模式、以及自定义的手机号验证码模式
 
 > 如果大家有什么疑问和不懂的地方可以[issue](https://https://github.com/yaohw007/springcloud-oauth2/issues/new) 里提问。
+有什么说得不对或不合理的地方也欢迎指出。如果对你有帮助，随手一个star可好^_^?
 
 ## 开发环境
 
@@ -393,21 +394,25 @@ security:
 			// A refresh token has its own default scopes, so we should ignore any added by the factory here.
 			tokenRequest.setScope(OAuth2Utils.parseParameterList(parameters.get(OAuth2Utils.SCOPE)));
 		}
-		// 这步是整个认证的关键，这里简单说下流程，首先她会根据当前请求的grantType找到对应的认证模式，比如密码模式的ResourceOwnerPasswordTokenGranter，
+		// 这步是整个认证的关键，这里简单说下流程，首先她会根据当前请求的grantType找到对应的认证模式，
+		// 比如密码模式的ResourceOwnerPasswordTokenGranter，
 
-		// 然后对应的AbstractTokenGranter调用对应的grant方法，grant方法中又调用经过一系列调用，在getOAuth2Authentication方法中生成对应的AbstractAuthenticationToken，比如UsernamePasswordAuthenticationToken，
+		// 然后对应的AbstractTokenGranter调用对应的grant方法，grant方法中又调用经过一系列调用,
+		// 在getOAuth2Authentication方法中生成对应的AbstractAuthenticationToken，比如UsernamePasswordAuthenticationToken，
 
-		// 然后认证管理器（就是我们在AuthorizationConfig中配置的AuthenticationManager）调用认证方法authenticationManager.authenticate(abstractAuthenticationToken)
+		// 然后认证管理器（就是我们在AuthorizationConfig中配置的AuthenticationManager）调用认证方法						// authenticationManager.authenticate(abstractAuthenticationToken)
 
 		// AbstractAuthenticationToken和AuthenticationProvider是存在一一对应的关系
 
-		// 比如UsernamePasswordAuthenticationToken和DaoAuthenticationProvider，authenticationManager.authenticate()会根据传入的AbstractAuthenticationToken找到对应的AuthenticationProvider，
+		// 比如UsernamePasswordAuthenticationToken和DaoAuthenticationProvider，authenticationManager.authenticate()会根据传入的			// AbstractAuthenticationToken找到对应的AuthenticationProvider，
 
-		// 真正认证逻辑通过AuthenticationProvider来完成的，比如密码模式的DaoAuthenticationProvider，会去根据用户名查询出对应的用户，然后校验用户密码是否匹配，用户是否锁定过期等
+		// 真正认证逻辑通过AuthenticationProvider来完成的，比如密码模式的DaoAuthenticationProvider，会去根据用户名查询出对应的用户，
+		// 然后校验用户密码是否匹配，用户是否锁定过期等
 
 		// 具体可查看DaoAuthenticationProvider和她继承的AbstractUserDetailsAuthenticationProvider
 
-		// 理清上面的思路后，我们就可以自定义grantType,就是定义一个继承AbstractTokenGranter的类，重写getOAuth2Authentication方法，该方法里面会用到AbstractAuthenticationToken和AuthenticationProvider
+		// 理清上面的思路后，我们就可以自定义grantType,就是定义一个继承AbstractTokenGranter的类重写getOAuth2Authentication方法
+		// 该方法里面会用到AbstractAuthenticationToken和AuthenticationProvider
 		// 我们再分别定义一个类分别继承对应的类即可（大概思路，具体查看代码）
 		OAuth2AccessToken token = getTokenGranter().grant(tokenRequest.getGrantType(), tokenRequest);
 		if (token == null) {
