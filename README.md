@@ -453,7 +453,8 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
         throw bad;
         }
         try {
-        // 这步是校验token的关键，这里tokenServices是ResourceServerTokenServices实例，这里做怎么样的操作取决于注入的				// ResourceServerTokenServices实例
+        // 这步是校验token的关键，这里tokenServices是ResourceServerTokenServices实例，这里做怎么样的操作取决于注入的		
+	// ResourceServerTokenServices实例
         // 默认情况下ResourceServerTokenServices的实例是DefaultTokenServices
         // 认证中心使用的就是DefaultTokenServices，这个类做的就是tokenStore.readAccessToken(accessTokenValue)
         // 我们配置中心配置的tokenStore的是RedisTokenStore，所以实际上她做的就是从redis中读取出accessToken相关信息
