@@ -1,6 +1,7 @@
 package cn.poile.ucs.resources.controller;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,6 +35,16 @@ public class TestRestController {
         //由于自定义的principal返回的是包含全部user字段的map
         Object principal = authentication.getPrincipal();
         return "need_token";
+    }
+
+    /**
+     * 需要需要管理员权限
+     * @return
+     */
+    @PreAuthorize("hasAuthority('admin')")
+    @GetMapping("/test/need_admin")
+    public @ResponseBody String admin() {
+        return "need_admin";
     }
 
 }
