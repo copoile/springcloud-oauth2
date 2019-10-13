@@ -287,7 +287,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
 
     /**
-     *  配置资源接口安全，http.authorizeRequests()针对的所有url，但是由于登录页面url包含在其中，这里配置会进行token校验，校验不通过返回错误json，
+     *  配置资源接口安全，http.authorizeRequests()针对的所有url，但是由于登录页面url包含在其中，这么配置会进行token校验，校验不通过返回错误json，
      *  而授权码模式获取code时需要重定向登录页面，重定向过程并不能携带token，所有不能用http.authorizeRequests()，
      *  而是用requestMatchers().antMatchers("")，这里配置的是需要资源接口拦截的url数组
      * @param http
