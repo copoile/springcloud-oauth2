@@ -483,3 +483,27 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
 
         }
 ```
+
+## postman接口测试截图
+### 密码模式
+
+![image](./images/密码模式_01.png "密码模式")
+
+### 自定义手机号验证码模式
+
+> 注意：需要在redis中设置一个String类型的key为sms:code:你的手机号，值就是你的短信验证码的缓存
+
+![image](./images/自定义模式_01.png "自定义模式")
+
+### 授权码模式
+##### 授权码模式步骤一
+
+![image](./images/授权码模式_01.png "授权码模式步骤一")
+
+##### 授权码模式步骤二
+
+![image](./images/授权码模式_02.png "授权码模式步骤一")
+
+### 简化模式
+
+![image](./images/简化模式_01.png "授权码模式步骤一")
