@@ -485,6 +485,9 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
 ```
 
 ## postman接口测试截图
+> 注意：postman的Authorization有几种方式，这里主要用到Basic的，
+实际请求会在请求头加上一个字段名为Authorization，值为:Basic eWFvaHc6eWFvaHc=,这后面的其实是yaohw:yaohw,经过base64加密了一下，
+携带token的请求要求在请求头加上一个字段名为Authorization，值为Bearer accessToken。
 ### 密码模式
 
 ![image](./images/密码模式_01.png "密码模式")
