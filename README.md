@@ -339,7 +339,7 @@ security:
 ```
 
 ## 部分源代码讲解
-### 认证（获取token）TokenEndpoint.java,
+### 认证（获取token）TokenEndpoint.java
 ```java
 
 	@RequestMapping(value = "/oauth/token", method=RequestMethod.POST)
@@ -417,4 +417,64 @@ security:
 		return getResponse(token);
 
 	}
+```
+### 验证token 
+了解过的同学应该知道OAuth2她有资源服务和认证中心服务，那么她怎么保护资源服务接口的呢？实际上不管认证中服务还是资源服务当请求的接口需要安全校验时都会被OAuth2ClientAuthenticationProcessingFilter所拦截，只是拦截后做了不同的处理（取决于ResourceServerTokenServices的实例）。
+资源服务：拦截请求后会远程调用认证服务器的http://127.0.0.1:8001/user或http://127.0.0.1:8001/oauth/check_token，至于调用哪个取决于配置文件，如配置如下配置将远程调用http://127.0.0.1:8001/user（资源服务端我们也一般这么配置即可)
+```yml
+##安全配置##
+security:
+  oauth2:
+    resource:
+      id: resource-server
+      user-info-uri: http://127.0.0.1:8001/user
+      prefer-token-info: false
+```
+
+#### （拦截token校验）OAuth2ClientAuthenticationProcessingFilter.java
+```java
+@Override
+public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+        throws AuthenticationException, IOException, ServletException {
+
+        OAuth2AccessToken accessToken;
+        try {
+        // 获取当前token，需要注意一点这个虽然用到restTemplate，但实际上这里并没有发起远程调度，这里restTemplate是OAuth2RestTemplate的实例
+        // 一路点进去你会发现他只是从上下文获取到accessToken
+        accessToken = restTemplate.getAccessToken();
+        } catch (OAuth2Exception e) {
+        BadCredentialsException bad = new BadCredentialsException("Could not obtain access token", e);
+        publish(new OAuth2AuthenticationFailureEvent(bad));
+        throw bad;
+        }
+        try {
+        // 这步是校验token的关键，这里tokenServices是ResourceServerTokenServices实例，这里做怎么样的操作取决是注入的				ResourceServerTokenServices
+        // 默认情况下ResourceServerTokenServices的实例DefaultTokenServices
+        // 认证中心默认的就是DefaultTokenServices，这个类做的就是从OAuth2AccessToken accessToken = 						tokenStore.readAccessToken(accessTokenValue)
+        // 我们配置中心配置的tokenStore的是RedisTokenStore，所以实际上她做的就是从redis中读取出accessToken相关信息
+        <!-- 分割线 --->
+        // 上面说的DefaultTokenServices是认证中心token的处理，资源服务下：
+        // 如果配置文件中配置的user-info-uri则ResourceServerTokenServices注入的实例将是UserInfoTokenServices的实例
+        // 如果配置token-info-uri则ResourceServerTokenServices注入的实例将是RemoteTokenServices
+        // 如果两者都配置了，优先UserInfoTokenServices
+        // UserInfoTokenServices和RemoteTokenServices做的事都是远程调度认证中心相应的接口完成token的校验
+        // 两者主要区别在于RemoteTokenServices需要配置clientId和clientSecret
+        // RemoteTokenServices中有这么一句话：Null Client ID or Client Secret detected. Endpoint that requires authentication will reject 	  // request with 401 error.
+        // 具体请查看RemoteTokenServices和UserInfoTokenServices
+        OAuth2Authentication result = tokenServices.loadAuthentication(accessToken.getValue());
+        if (authenticationDetailsSource!=null) {
+        request.setAttribute(OAuth2AuthenticationDetails.ACCESS_TOKEN_VALUE, accessToken.getValue());
+        request.setAttribute(OAuth2AuthenticationDetails.ACCESS_TOKEN_TYPE, accessToken.getTokenType());
+        result.setDetails(authenticationDetailsSource.buildDetails(request));
+        }
+        publish(new AuthenticationSuccessEvent(result));
+        return result;
+        }
+        catch (InvalidTokenException e) {
+        BadCredentialsException bad = new BadCredentialsException("Could not obtain user details from token", e);
+        publish(new OAuth2AuthenticationFailureEvent(bad));
+        throw bad;
+        }
+
+        }
 ```
