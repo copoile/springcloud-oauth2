@@ -502,8 +502,12 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
 
 ##### 授权码模式步骤二
 
-![image](./images/授权码模式_02.png "授权码模式步骤一")
+![image](./images/授权码模式_02.png "授权码模式步骤二")
 
 ### 简化模式
 
-![image](./images/简化模式_01.png "授权码模式步骤一")
+![image](./images/简化模式_01.png "简化")
+### 刷新token模式
+
+![image](./images/刷新token.png "刷新")
+
