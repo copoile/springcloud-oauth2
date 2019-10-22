@@ -396,23 +396,17 @@ security:
 		}
 		// 这步是整个认证的关键，这里简单说下流程，首先她会根据当前请求的grantType找到对应的认证模式，
 		// 比如密码模式的ResourceOwnerPasswordTokenGranter，
-
 		// 然后对应的AbstractTokenGranter调用对应的grant方法，grant方法中又调用经过一系列调用,
 		// 在getOAuth2Authentication方法中生成对应的AbstractAuthenticationToken，比如UsernamePasswordAuthenticationToken，
-
 		// 然后认证管理器（就是我们在AuthorizationConfig中配置的AuthenticationManager）调用认证方法						// authenticationManager.authenticate(abstractAuthenticationToken)
-
 		// AbstractAuthenticationToken和AuthenticationProvider是存在一一对应的关系
-
 		// 比如UsernamePasswordAuthenticationToken和DaoAuthenticationProvider，
 		// authenticationManager.authenticate()会根据传入的
 		// AbstractAuthenticationToken找到对应的AuthenticationProvider，
 		// 真正认证逻辑通过AuthenticationProvider来完成的，比如密码模式的DaoAuthenticationProvider，
 		// 会去根据用户名查询出对应的用户，
 		// 然后校验用户密码是否匹配，用户是否锁定过期等
-
 		// 具体可查看DaoAuthenticationProvider和她继承的AbstractUserDetailsAuthenticationProvider
-
 		// 理清上面的思路后，我们就可以自定义grantType
 		// 就是定义一个继承AbstractTokenGranter的类重写getOAuth2Authentication方法
 		// 该方法里面会用到AbstractAuthenticationToken和AuthenticationProvider
