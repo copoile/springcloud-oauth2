@@ -404,14 +404,17 @@ security:
 
 		// AbstractAuthenticationToken和AuthenticationProvider是存在一一对应的关系
 
-		// 比如UsernamePasswordAuthenticationToken和DaoAuthenticationProvider，authenticationManager.authenticate()会根据传入的			// AbstractAuthenticationToken找到对应的AuthenticationProvider，
-
-		// 真正认证逻辑通过AuthenticationProvider来完成的，比如密码模式的DaoAuthenticationProvider，会去根据用户名查询出对应的用户，
+		// 比如UsernamePasswordAuthenticationToken和DaoAuthenticationProvider，
+		// authenticationManager.authenticate()会根据传入的
+		// AbstractAuthenticationToken找到对应的AuthenticationProvider，
+		// 真正认证逻辑通过AuthenticationProvider来完成的，比如密码模式的DaoAuthenticationProvider，
+		// 会去根据用户名查询出对应的用户，
 		// 然后校验用户密码是否匹配，用户是否锁定过期等
 
 		// 具体可查看DaoAuthenticationProvider和她继承的AbstractUserDetailsAuthenticationProvider
 
-		// 理清上面的思路后，我们就可以自定义grantType,就是定义一个继承AbstractTokenGranter的类重写getOAuth2Authentication方法
+		// 理清上面的思路后，我们就可以自定义grantType
+		// 就是定义一个继承AbstractTokenGranter的类重写getOAuth2Authentication方法
 		// 该方法里面会用到AbstractAuthenticationToken和AuthenticationProvider
 		// 我们再分别定义一个类分别继承对应的类即可（大概思路，具体查看代码）
 		OAuth2AccessToken token = getTokenGranter().grant(tokenRequest.getGrantType(), tokenRequest);
