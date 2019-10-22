@@ -398,7 +398,7 @@ security:
 		// 比如密码模式的ResourceOwnerPasswordTokenGranter，
 		// 然后对应的AbstractTokenGranter调用对应的grant方法，grant方法中又调用经过一系列调用,
 		// 在getOAuth2Authentication方法中生成对应的AbstractAuthenticationToken，比如UsernamePasswordAuthenticationToken，
-		// 然后认证管理器（就是我们在AuthorizationConfig中配置的AuthenticationManager）调用认证方法						// authenticationManager.authenticate(abstractAuthenticationToken)
+		// 然后认证管理器（就是我们在AuthorizationConfig中配置的AuthenticationManager）调用认证方法authenticationManager.authenticate(abstractAuthenticationToken)
 		// AbstractAuthenticationToken和AuthenticationProvider是存在一一对应的关系
 		// 比如UsernamePasswordAuthenticationToken和DaoAuthenticationProvider，
 		// authenticationManager.authenticate()会根据传入的
