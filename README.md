@@ -381,7 +381,7 @@ security:
 		if (tokenRequest.getGrantType().equals("implicit")) {
 			throw new InvalidGrantException("Implicit grant type not supported from token endpoint");
 		}
-		// 判断是否简化模式，如果是，清空返回，因为简化模式在第一步获取code的时候就将client信息缓存起来的，后面检验的是从缓存取出来补充完整
+		// 判断是否授权码模式，如果是，清空返回，因为授权码模式在第一步获取code的时候就将client信息缓存起来的，后面检验的是从缓存取出来补充完整
 		if (isAuthCodeRequest(parameters)) {
 			// The scope was requested or determined during the authorization step
 			if (!tokenRequest.getScope().isEmpty()) {
