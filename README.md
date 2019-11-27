@@ -11,7 +11,7 @@ springcloud-oauth2搭建基于spring-cloud-starter-oauth2的认证中心和资�
 
 - **JDK 1.8 +**
 - **Maven 3.5 +**
-- **IntelliJ IDEA ULTIMATE 2018.2 +** (*注意：务必使用 IDEA 开发，同时保证安装 `lombok` 插件*)
+- **IntelliJ IDEA ULTIMATE 2018.2 +** (*注意：建议使用 IDEA 开发，同时保证安装 `lombok` 插件，如果是eclipse也要确保安装了`lombok` 插件*)
 - **Redis 3.0 +**
 
 ## 运行方式
