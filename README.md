@@ -486,13 +486,14 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
 > 注意：postman的Authorization有几种方式，这里主要用到Basic的，
 实际请求会在请求头加上一个字段名为Authorization，值为:Basic eWFvaHc6eWFvaHc=,这后面的其实是yaohw:yaohw,经过base64加密了一下，
 携带token的请求要求在请求头加上一个字段名为Authorization，值为Bearer accessToken。
+授权码模式第一步和简化模式返回的是一个认证页面，登录后会回调（填的回调地址）,并在回调参数返回code或accessToken。
 ### 密码模式
 
 ![image](./images/密码模式_01.png "密码模式")
 
 ### 自定义手机号验证码模式
 
-> 注意：需要在redis中设置一个String类型的key为sms:code:你的手机号，值就是你的短信验证码的缓存
+> 注意：需要在redis中设置一个缓存，String类型，key为sms:code:你的手机号，值为短信验证码
 
 ![image](./images/自定义模式_01.png "自定义模式")
 
