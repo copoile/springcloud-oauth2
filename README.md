@@ -5,7 +5,7 @@ springcloud-oauth2搭建基于spring-cloud-starter-oauth2的认证中心和资�
 认证中心完成密码模式、授权码模式、刷新token模式、简化模式、以及自定义的手机号验证码模式。
 
 > 如果大家有什么疑问或不懂的地方可以[issue](https://github.com/yaohw007/springcloud-oauth2/issues/new) 里提问。
-有什么说得不对或不合理的地方也欢迎指出。如果对你有帮助，随手一个star可好^_^?
+有什么说得不对或不合理的地方也欢迎指出。希望对你有所帮助呦~ ^_^
 
 ## 开发环境
 
