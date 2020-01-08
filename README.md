@@ -499,7 +499,7 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
 
 ### 授权码模式
 ##### 授权码模式步骤一
-
+授权码模式步骤一 会跳转到认证中心的授权页面，这里为方便展示参数才用postman，get请求，应在浏览器直接打开（带对应参数），授权成功后会回调回调地址，并且会携带code。
 ![image](./images/授权码模式_01.png "授权码模式步骤一")
 
 ##### 授权码模式步骤二
@@ -507,7 +507,7 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
 ![image](./images/授权码模式_02.png "授权码模式步骤二")
 
 ### 简化模式
-
+与授权码模式类似，不过回调后携带的参数不是code，还是access_token,比授权码模式少了一步。
 ![image](./images/简化模式_01.png "简化")
 ### 刷新token模式
 
