@@ -484,9 +484,18 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
 
 ## postman接口测试截图
 > 注意：postman的Authorization有几种方式，这里主要用到Basic的，
-实际请求会在请求头加上一个字段名为Authorization，值为:Basic eWFvaHc6eWFvaHc=,这后面的其实是yaohw:yaohw,经过base64加密了一下，
+实际请求会在其请求头加上一个字段名为Authorization，值为:Basic eWFvaHc6eWFvaHc=,这后面的其实是yaohw:yaohw,经过base64加密了一下，
 携带token的请求要求在请求头加上一个字段名为Authorization，值为Bearer accessToken。
 授权码模式第一步和简化模式返回的是一个认证页面，登录后会回调（填的回调地址）,并在回调参数返回code或accessToken。
+
+### 客户端Basic请求头
+
+![image](./images/客户端请求头.png "客户端请求头")
+
+### 请求头携带token
+
+![image](./images/携带token.png "携带token")
+
 ### 密码模式
 
 ![image](./images/密码模式_01.png "密码模式")
