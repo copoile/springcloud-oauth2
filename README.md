@@ -504,6 +504,8 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
 
 > 注意：需要在redis中设置一个缓存，String类型，key为sms:code:你的手机号，值为短信验证码
 
+![image](./images/验证码.png "redis存储的验证码")
+
 ![image](./images/自定义模式_01.png "自定义模式")
 
 ### 授权码模式
