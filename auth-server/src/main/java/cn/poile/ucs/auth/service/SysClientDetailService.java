@@ -31,6 +31,11 @@ public class SysClientDetailService {
         //设置accessToken和refreshToken的时效，如果不设置则使tokenServices的配置的
         clientDetails.setAccessTokenValiditySeconds((int) TimeUnit.HOURS.toSeconds(2));
         clientDetails.setRefreshTokenValiditySeconds((int)TimeUnit.DAYS.toSeconds(30));
+        // 资源id列表，需要注意的是这里配置的需要与ResourceServerConfig中配置的相匹配
+        List<String> resourceIds = new ArrayList<>();
+        resourceIds.add("auth-server");
+        resourceIds.add("resource-server");
+        clientDetails.setResourceIds(resourceIds);
         List<String> scopes = new ArrayList<>(1);
         scopes.add("sever");
         clientDetails.setScope(scopes);

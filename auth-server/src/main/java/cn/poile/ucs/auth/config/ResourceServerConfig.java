@@ -34,7 +34,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http    //配置需要保护的资源接口
-                .requestMatchers().antMatchers("/user","/test/need_token","/update","/logout","/test/need_admin")
+                .requestMatchers().antMatchers("/user","/test/need_token","/update","/logout","/test/need_admin","/test/scope")
                 .and().authorizeRequests().anyRequest().authenticated();
     }
 

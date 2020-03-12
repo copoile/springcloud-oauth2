@@ -12,10 +12,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
@@ -117,6 +114,16 @@ public class AuthenticationController {
     public ModelAndView require() {
         log.info("---认证页面---");
         return new ModelAndView("ftl/login");
+    }
+
+    /**
+     * scope 控制测试,该方法只有配置有scope为sever2的客户端能访问，针对的是客户端
+     * @return
+     */
+    @GetMapping("/test/scope")
+    @PreAuthorize("#oauth2.hasScope('sever2')")
+    public @ResponseBody String test3() {
+        return "scope-test";
     }
 
 }
