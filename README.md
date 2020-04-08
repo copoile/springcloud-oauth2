@@ -498,7 +498,7 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
 
 ### 密码模式
 
-![image](https://poile-img.nos-eastchina1.126.net/oauth2/password.png)
+![image](https://poile-img.nos-eastchina1.126.net/oauth2/-password.png)
 
 ### 自定义手机号验证码模式
 
