@@ -29,7 +29,7 @@ public class ClientDetailsServiceImpl implements ClientDetailsService {
      */
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
-        log.info("客户端查询:"+clientId);
+        log.info("客户端查询:" + clientId);
         BaseClientDetails baseClientDetails = clientDetailService.selectById(clientId);
         if (baseClientDetails == null) {
             throw new NoSuchClientException("not found clientId:" + clientId);
