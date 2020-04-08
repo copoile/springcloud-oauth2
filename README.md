@@ -490,7 +490,7 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
 
 这里两种方式都是一样的，eWFvaHc6eWFvaHc=其实就是yaohw:yaohw,经过base64加密了一下
 
-![image](https://poile-img.nos-eastchina1.126.net/oauth2/--Basic.png)
+![image](https://poile-img.nos-eastchina1.126.net/oauth2/2Basic.png)
 
 
 
@@ -498,7 +498,7 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
 
 ### 密码模式
 
-![image](https://poile-img.nos-eastchina1.126.net/oauth2/-password.png)
+![image](https://poile-img.nos-eastchina1.126.net/oauth2/password2.png)
 
 ### 自定义手机号验证码模式
 
@@ -508,7 +508,7 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
 
 
 
-![image](https://poile-img.nos-eastchina1.126.net/oauth2/mobile.png)
+![image](https://poile-img.nos-eastchina1.126.net/oauth2/mobile2.png)
 
 ### 授权码模式
 ##### 授权码模式步骤一
@@ -544,7 +544,7 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
 
 ### 步骤三
 
-![](https://poile-img.nos-eastchina1.126.net/oauth2/%20Implicit-2.png)
+![](https://poile-img.nos-eastchina1.126.net/oauth2/%20Implicit2-2.png)
 
 ### 刷新token模式
 
