@@ -490,7 +490,7 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
 
 这里两种方式都是一样的，eWFvaHc6eWFvaHc=其实就是yaohw:yaohw,经过base64加密了一下
 
-![image](https://poile-img.nos-eastchina1.126.net/oauth2/Basic.png)
+![image](https://poile-img.nos-eastchina1.126.net/oauth2/-Basic.png)
 
 
 
