@@ -14,7 +14,7 @@
 
 ## 运行方式
 
-1. `git clone https://https://github.com/yaohw007/springcloud-oauth2.git`
+1. `git clone https://https://github.com/copoile/springcloud-oauth2.git`
 2. 使用 IDEA 打开 clone 下来的项目
 3. 项目启动顺序: eureka-server > auth-server > resource-server
 > 注意：auth-server依赖redis服务，记得先启动redis服务哦~
