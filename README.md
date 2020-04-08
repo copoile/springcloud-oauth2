@@ -1,10 +1,8 @@
 # 项目介绍
 
-springcloud-oauth2搭建基于spring-cloud-starter-oauth2的认证中心和资源服务器的微服务项目，项目不仅仅简单的demo，项目的出发点在于实战应用，我在某公司用的就是基于本项目搭建。
-本项目为本人花了不少时间和精力整理出来的，只需要稍微调整就可应用于实际项目当中，并且项目包含大量注释，不仅可以让你会用，也可让你了解到一些流程、一些原理上的东西。
-认证中心完成密码模式、授权码模式、刷新token模式、简化模式、以及自定义的手机号验证码模式。
+本项目基于spring-cloud-starter-oauth2搭建的认证中心和资源服务器的微服务项目，项目不仅仅简单的demo，项目的出发点在于实战应用。本项目为笔者花了不少时间和精力整理出来的，只需要稍微调整就可应用于实际项目当中，并且项目包含大量注释，不仅可以让你会用，也可让你了解到一些流程、一些原理上的东西。认证中心完成密码模式、授权码模式、刷新token模式、简化模式、以及自定义的手机号验证码模式。
 
-> 如果大家有什么疑问或不懂的地方可以[issue](https://github.com/yaohw007/springcloud-oauth2/issues/new) 里提问。
+> 如果大家有什么疑问或不懂的地方可以[issue](https://github.com/copoile/springcloud-oauth2/issues/new) 里提问。
 有什么说得不对或不合理的地方也欢迎指出。希望对你有所帮助呦~ ^_^
 
 ## 开发环境
@@ -54,7 +52,8 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
 
     /**
-     * 配置token存储，这个配置token存到redis中
+     * 配置token存储，这个配置token存到redis中,还有一种常用的是JwkTokenStore
+     * jwt的缺点已发布令牌不可控
      * @return
      */
     @Bean
@@ -84,23 +83,24 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        //采用token转jwt，并添加一些自定义信息（token增强）（有默认非必须）
+        // 采用token转jwt，并添加一些自定义信息（token增强）
+        // 默认clientId + userId 使用MD5加密生成的token
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
         tokenEnhancerChain.setTokenEnhancers(
                 Arrays.asList(jwtAccessTokenConverter(),tokenEnhancer()));
         endpoints.tokenEnhancer(tokenEnhancerChain)
-                //配置token存储，一般配置redis存储
+                // 配置token存储，一般配置redis存储
                 .tokenStore(tokenStore())
-                //配置认证管理器
+                // 配置认证管理器
                 .authenticationManager(authenticationManager)
-                //配置用户详情server，密码模式必须
+                // 配置用户详情server，密码模式必须
                 .userDetailsService(userDetailsService)
-                //配置授权码模式授权码服务,不配置默认为内存模式
+                // 配置授权码模式授权码服务,不配置默认为内存模式
                 .authorizationCodeServices(authorizationCodeServices())
-                //配置grant_type模式，如果不配置则默认使用密码模式、简化模式、验证码模式以及刷新token模式，如果配置了只使用配置中，默认配置失效
-                //具体可以查询AuthorizationServerEndpointsConfigurer中的getDefaultTokenGranters方法
+                // 配置grant_type模式，如果不配置则默认使用密码模式、简化模式、验证码模式以及刷新token模式，如果配置了只使用配置中，默认配置失效
+                // 具体可以查询AuthorizationServerEndpointsConfigurer中的getDefaultTokenGranters方法
                 .tokenGranter(tokenGranter(endpoints));
-        // 配置TokenServices参数
+        //  配置TokenServices参数
         DefaultTokenServices tokenServices = new DefaultTokenServices();
         tokenServices.setTokenStore(endpoints.getTokenStore());
         // 是否支持刷新Token
@@ -108,7 +108,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
         tokenServices.setReuseRefreshToken(true);
         tokenServices.setClientDetailsService(endpoints.getClientDetailsService());
         tokenServices.setTokenEnhancer(endpoints.getTokenEnhancer());
-        //设置accessToken和refreshToken的默认超时时间(如果clientDetails的为null就取默认的，如果clientDetails的不为null取clientDetails中的)
+        // 设置accessToken和refreshToken的默认超时时间(如果clientDetails的为null就取默认的，如果clientDetails的不为null取clientDetails中的)
         tokenServices.setAccessTokenValiditySeconds((int) TimeUnit.HOURS.toSeconds(2));
         tokenServices.setRefreshTokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30));
         endpoints.tokenServices(tokenServices);
@@ -124,7 +124,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
-        //设置jwt加解密秘钥，不设置会随机一个
+        // 设置jwt加解密秘钥，不设置会随机一个
         jwtAccessTokenConverter.setSigningKey("yaohw");
         return jwtAccessTokenConverter;
     }
@@ -164,7 +164,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
      */
     private TokenGranter tokenGranter(AuthorizationServerEndpointsConfigurer endpoints) {
         List<TokenGranter> list = new ArrayList<>();
-        //这里配置密码模式、刷新token模式、自定义手机号验证码模式、授权码模式、简化模式
+        // 这里配置密码模式、刷新token模式、自定义手机号验证码模式、授权码模式、简化模式
         list.add(new ResourceOwnerPasswordTokenGranter(authenticationManager, endpoints.getTokenServices(), endpoints.getClientDetailsService(), endpoints.getOAuth2RequestFactory()));
         list.add(new RefreshTokenGranter(endpoints.getTokenServices(), endpoints.getClientDetailsService(), endpoints.getOAuth2RequestFactory()));
         list.add(new MobileCodeTokenGranter(authenticationManager,endpoints.getTokenServices(), endpoints.getClientDetailsService(), endpoints.getOAuth2RequestFactory()));
@@ -329,7 +329,7 @@ security:
     resource:
       id: resource-server
       ## user-info-uri和token-info-uri二选择即可
-      ##如果配置了user-info-uri，该资源服务器使用userInfoTokenServices远程调用认证中心接口，通过认证中心的OAuth2AuthenticationProcessingFilter完成验证工作，一般设置user-info-uri即可
+      ## 如果配置了user-info-uri，该资源服务器使用userInfoTokenServices远程调用认证中心接口，通过认证中心的OAuth2AuthenticationProcessingFilter完成验证工作，一般设置user-info-uri即可
       user-info-uri: http://127.0.0.1:8001/user
       prefer-token-info: false
       ## 该资源服务器使用RemoteTokenServices远程调用认证中心接口，注意一点就是如果使用token-info-uri那么就必须设置上clientId和clientSecret，通过CheckTokenEndpoint完成验证工作
@@ -355,7 +355,7 @@ security:
 		// 根据当前请求获取到clientId
 		String clientId = getClientId(principal);
 
-		//获取当前ClientDetailsService（就是我们在AuthorizationConfig中配置）然后根据clientId去数据库查询客户端详情
+		// 获取当前ClientDetailsService（就是我们在AuthorizationConfig中配置）然后根据clientId去数据库查询客户端详情
 		ClientDetails authenticatedClient = getClientDetailsService().loadClientByClientId(clientId);
 
 		// 将请求参数封装成TokenRequest

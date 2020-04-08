@@ -39,7 +39,7 @@ public class SysClientDetailService {
         List<String> scopes = new ArrayList<>(1);
         scopes.add("sever");
         clientDetails.setScope(scopes);
-        List<String> grantTypes = new ArrayList<>(2);
+        List<String> grantTypes = new ArrayList<>(5);
         grantTypes.add("password");
         grantTypes.add("refresh_token");
         grantTypes.add("authorization_code");
