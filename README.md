@@ -276,7 +276,7 @@ public class SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
  * @create: 2019-10-08 10:04
  **/
 @Configuration
-//启用资源服务
+// 启用资源服务
 @EnableResourceServer
 // 启用方法级权限控制
 @EnableGlobalMethodSecurity(prePostEnabled = true)

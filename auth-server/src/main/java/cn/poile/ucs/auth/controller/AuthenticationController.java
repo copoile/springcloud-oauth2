@@ -53,7 +53,7 @@ public class AuthenticationController {
                 newOAuth2Authentication= new OAuth2Authentication(auth2Authentication.getOAuth2Request(),usernamePasswordAuthenticationToken);
             }
             OAuth2AccessToken accessToken = tokenStore.getAccessToken(auth2Authentication);
-            if (newOAuth2Authentication!=null) {
+            if (newOAuth2Authentication != null) {
                 tokenStore.storeAccessToken(accessToken,newOAuth2Authentication);
             }
         }

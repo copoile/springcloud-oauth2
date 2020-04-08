@@ -34,14 +34,18 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                //配置不需要安全拦截url
+                // 配置不需要安全拦截url
                 .antMatchers("/test/no_need_token").permitAll()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().authenticated();
 
     }
 
-
+    /**
+     * 这个是跟服务绑定的，注意要跟client配置一致，如果客户端没有，则不能访问
+     * @param resources
+     * @throws Exception
+     */
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
         resources.resourceId(RESOURCE_ID).stateless(true);

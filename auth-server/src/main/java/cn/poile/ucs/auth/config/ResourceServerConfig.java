@@ -38,7 +38,11 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .and().authorizeRequests().anyRequest().authenticated();
     }
 
-
+    /**
+     * 这个是跟服务绑定的，注意要跟client配置一致，如果客户端没有，则不能访问
+     * @param resources
+     * @throws Exception
+     */
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
         resources.resourceId(RESOURCE_ID).stateless(true);

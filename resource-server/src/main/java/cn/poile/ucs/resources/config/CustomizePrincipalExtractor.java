@@ -19,8 +19,8 @@ public class CustomizePrincipalExtractor implements PrincipalExtractor {
      */
     @Override
     public Object extractPrincipal(Map<String, Object> map) {
-        //这直接返回map本身，该map包含的认证中心对的principal的所有字段（key为字段名，value为字段值形式）
-        //这里也可以new一个user对象，将map对应字段值映射到user对象中返回user对象
+        // 这直接返回map本身，该map包含的认证中心对的principal的所有字段（key为字段名，value为字段值形式）
+        // 这里也可以new一个user对象，将map对应字段值映射到user对象中返回user对象
         return map;
     }
 }

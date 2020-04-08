@@ -32,7 +32,7 @@ public class TestRestController {
     @GetMapping("/test/need_token")
     public @ResponseBody String test2(Authentication authentication) {
         log.info("{}",authentication);
-        //由于自定义的principal返回的是包含全部user字段的map
+        // 由于自定义的principal返回的是包含全部user字段的map
         Object principal = authentication.getPrincipal();
         return "need_token";
     }
