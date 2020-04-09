@@ -421,7 +421,7 @@ security:
 	}
 ```
 ### 验证token 
-了解过的同学应该知道OAuth2她有资源服务和认证中心服务，那么她怎么保护资源服务接口的呢？实际上不管认证中服务还是资源服务，当请求的接口需要安全校验时都会被OAuth2ClientAuthenticationProcessingFilter所拦截，只是拦截后做了不同的处理（取决于ResourceServerTokenServices的实例）。
+了解过OAuth2的同学应该知道它有资源服务和认证中心服务，那么它怎么保护资源服务接口的呢？实际上不管认证中服务还是资源服务，当请求的接口需要安全校验时都会被OAuth2ClientAuthenticationProcessingFilter所拦截，只是拦截后做了不同的处理（取决于ResourceServerTokenServices的实例）。
 资源服务：拦截请求后会远程调用认证服务器的`http://127.0.0.1:8001/user`或`http://127.0.0.1:8001/oauth/check_token`，至于调用哪个取决于配置文件，如配置如下配置将远程调用`http://127.0.0.1:8001/user`（资源服务端我们也一般这么配置即可)
 ```yml
 ##安全配置##
@@ -485,16 +485,6 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
 
 
 ## postman接口测试截图
-
-> 图片没显示多半是DNS解析的问题，老司机应该都知道GitHub的毛病,需要修改本地hosts
->
-> windows下路径为：C:\Windows\System32\drivers\etc\hosts
->
-> Linux下路径：/etc/hosts
->
-> 以管理员方式打开hosts编辑，在末尾加上以下内容保存即可：
->
-> 151.101.100.133 camo.githubusercontent.com
 
 ### 客户端Basic请求头
 
