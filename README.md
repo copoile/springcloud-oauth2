@@ -1,9 +1,11 @@
-# 项目介绍
+# 简介
 
 本项目基于spring-cloud-starter-oauth2搭建的认证中心和资源服务器的微服务项目，项目不仅仅简单的demo，项目的出发点在于实战应用。本项目为笔者花了不少时间和精力整理出来的，只需要稍微调整就可应用于实际项目当中，并且项目包含大量注释，不仅可以让你会用，也可让你了解到一些流程、一些原理上的东西。认证中心完成密码模式、授权码模式、刷新token模式、简化模式、以及自定义的手机号验证码模式。
 
 > 如果大家有什么疑问或不懂的地方可以[issue](https://github.com/copoile/springcloud-oauth2/issues/new) 里提问。
 有什么说得不对或不合理的地方也欢迎指出。希望对你有所帮助呦~ ^_^
+
+
 
 ## 开发环境
 
@@ -12,6 +14,8 @@
 - **IntelliJ IDEA ULTIMATE 2018.2 +** (*注意：建议使用 IDEA 开发，同时保证安装 `lombok` 插件，如果是eclipse也要确保安装了`lombok` 插件*)
 - **Redis 3.0 +**
 
+
+
 ## 运行方式
 
 1. `git clone https://https://github.com/copoile/springcloud-oauth2.git`
@@ -19,7 +23,17 @@
 3. 项目启动顺序: eureka-server > auth-server > resource-server
 > 注意：auth-server依赖redis服务，记得先启动redis服务哦~
 
-## 认证中心部分代码
+
+
+# 认证验证流程
+
+这里简单做下密码模式的认证和accessToken验证流程，手机号模式跟这个类型，授权码模式和简化模式稍微有点不一样，授权码模式和简化模式都是先跳到认证中心的授权页面，授权成功后回调回调地址，并且携带参数code或accessToken。
+
+![](./images/flow.png)
+
+
+
+## 认证中心核心代码
 
 ### AuthorizationConfig.java
 ```java
@@ -307,7 +321,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     }
 }
 ```
+
+
 ## 资源服务配置文件
+
 ```yml
 spring:
   application:
@@ -339,7 +356,10 @@ security:
       #client-id: yaohw
 ```
 
+
+
 ## 部分源代码讲解
+
 ### 认证（获取token）TokenEndpoint.java
 ```java
 
@@ -421,8 +441,8 @@ security:
 	}
 ```
 ### 验证token 
-了解过OAuth2的同学应该知道它有资源服务和认证中心服务，那么它怎么保护资源服务接口的呢？实际上不管认证中服务还是资源服务，当请求的接口需要安全校验时都会被OAuth2ClientAuthenticationProcessingFilter所拦截，只是拦截后做了不同的处理（取决于ResourceServerTokenServices的实例）。
-资源服务：拦截请求后会远程调用认证服务器的`http://127.0.0.1:8001/user`或`http://127.0.0.1:8001/oauth/check_token`，至于调用哪个取决于配置文件，如配置如下配置将远程调用`http://127.0.0.1:8001/user`（资源服务端我们也一般这么配置即可)
+了解过OAuth2的同学应该知道它有资源服务和认证中心服务，那么它怎么保护资源服务接口的呢？实际上不管认证中服务还是资源服务，当请求的接口需要安全校验时都会被OAuth2ClientAuthenticationProcessingFilter所拦截，只是拦截后做了不同的处理（取决于ResourceServerTokenServices的实例）。资源服务：拦截请求后会远程调用认证服务器的`http://127.0.0.1:8001/user`或`http://127.0.0.1:8001/oauth/check_token`，至于调用哪个取决于配置文件，如配置如下配置将远程调用`http://127.0.0.1:8001/user`（资源服务端我们也一般这么配置即可)
+
 ```yml
 ##安全配置##
 security:
