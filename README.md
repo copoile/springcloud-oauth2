@@ -482,45 +482,71 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
         }
 ```
 
+
+
 ## postman接口测试截图
-> 注意：postman的Authorization有几种方式，这里主要用到Basic的，
-实际请求会在其请求头加上一个字段名为Authorization，值为:Basic eWFvaHc6eWFvaHc=,这后面的其实是yaohw:yaohw,经过base64加密了一下，
-携带token的请求要求在请求头加上一个字段名为Authorization，值为Bearer accessToken。
-授权码模式第一步和简化模式返回的是一个认证页面，登录后会回调（填的回调地址）,并在回调参数返回code或accessToken。
 
 ### 客户端Basic请求头
 
-![image](./images/客户端请求头.png "客户端请求头")
+这里两种方式都是一样的，eWFvaHc6eWFvaHc=其实就是yaohw:yaohw,经过base64加密了一下
 
-### 请求头携带token
+![image](https://poile-img.nos-eastchina1.126.net/oauth2/2Basic.png)
 
-![image](./images/携带token.png "携带token")
+
+
+![](https://poile-img.nos-eastchina1.126.net/oauth2/Basic-2.png)
 
 ### 密码模式
 
-![image](./images/密码模式_01.png "密码模式")
+![image](https://poile-img.nos-eastchina1.126.net/oauth2/password2.png)
 
 ### 自定义手机号验证码模式
 
 > 注意：需要在redis中设置一个缓存，String类型，key为sms:code:你的手机号，值为短信验证码
 
-![image](./images/验证码.png "redis存储的验证码")
+![image](https://poile-img.nos-eastchina1.126.net/oauth2/cache.png)
 
-![image](./images/自定义模式_01.png "自定义模式")
+
+
+![image](https://poile-img.nos-eastchina1.126.net/oauth2/mobile2.png)
 
 ### 授权码模式
 ##### 授权码模式步骤一
 授权码模式步骤一 会跳转到认证中心的授权页面，这里为方便展示参数才用postman，get请求，应在浏览器直接打开（带对应参数），授权成功后会回调回调地址，并且会携带code。
-![image](./images/授权码模式_01.png "授权码模式步骤一")
+![image](https://poile-img.nos-eastchina1.126.net/oauth2/code-1.png)
 
-##### 授权码模式步骤二
+##### 授权码模式步骤二（授权页面授权）
 
-![image](./images/授权码模式_02.png "授权码模式步骤二")
+![image](https://poile-img.nos-eastchina1.126.net/oauth2/code-2.png)
+
+### 授权码模式步骤三（获取code）
+
+![](https://poile-img.nos-eastchina1.126.net/oauth2/code-3.png)
+
+
+
+### 授权码模式步骤四（根据code获取token）
+
+![](https://poile-img.nos-eastchina1.126.net/oauth2/code-4.png)
 
 ### 简化模式
-与授权码模式类似，不过回调后携带的参数不是code，还是access_token,比授权码模式少了一步。
-![image](./images/简化模式_01.png "简化")
+与授权码模式类似，不过回调后携带的参数不是code，还是access_token,比授权码模式少了一步.
+
+### 步骤一
+
+简化模式步骤一会跳转到认证中心的授权页面，这里为方便展示参数才用postman，get请求，应在浏览器直接打开（带对应参数），授权成功后会回调回调地址，并且会携带accessToken。
+
+![image](https://poile-img.nos-eastchina1.126.net/oauth2/%20implicit.png)
+
+##### 步骤二（授权页面授权）
+
+![image](https://poile-img.nos-eastchina1.126.net/oauth2/code-2.png)
+
+### 步骤三
+
+![](https://poile-img.nos-eastchina1.126.net/oauth2/%20Implicit2-2.png)
+
 ### 刷新token模式
 
-![image](./images/刷新token.png "刷新")
+![image](https://poile-img.nos-eastchina1.126.net/oauth2/refresh-token.png)
 
