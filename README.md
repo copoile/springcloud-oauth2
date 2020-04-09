@@ -486,6 +486,16 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
 
 ## postman接口测试截图
 
+> 图片没显示多半是DNS解析的问题，老司机应该都知道GitHub的毛病,需要修改本地hosts
+>
+> windows下路径为：C:\Windows\System32\drivers\etc\hosts
+>
+> Linux下路径：/etc/hosts
+>
+> 以管理员方式打开hosts编辑，在末尾加上以下内容保存即可：
+>
+> 151.101.100.133 camo.githubusercontent.com
+
 ### 客户端Basic请求头
 
 这里两种方式都是一样的，eWFvaHc6eWFvaHc=其实就是yaohw:yaohw,经过base64加密了一下
