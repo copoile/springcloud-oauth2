@@ -490,44 +490,44 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
 
 这里两种方式都是一样的，eWFvaHc6eWFvaHc=其实就是yaohw:yaohw,经过base64加密了一下
 
-![image](https://poile-img.nos-eastchina1.126.net/oauth2/2Basic.png)
+![image](./images/Basic.png)
 
 
 
-![](https://poile-img.nos-eastchina1.126.net/oauth2/Basic-2.png)
+![](./images/Basic-2.png)
 
 ### 密码模式
 
-![image](https://poile-img.nos-eastchina1.126.net/oauth2/password2.png)
+![image](./images/password.png)
 
 ### 自定义手机号验证码模式
 
 > 注意：需要在redis中设置一个缓存，String类型，key为sms:code:你的手机号，值为短信验证码
 
-![image](https://poile-img.nos-eastchina1.126.net/oauth2/cache.png)
+![image](./images/cache.png)
 
 
 
-![image](https://poile-img.nos-eastchina1.126.net/oauth2/mobile2.png)
+![image](./images/mobile.png)
 
 ### 授权码模式
 ##### 授权码模式步骤一
 授权码模式步骤一 会跳转到认证中心的授权页面，这里为方便展示参数才用postman，get请求，应在浏览器直接打开（带对应参数），授权成功后会回调回调地址，并且会携带code。
-![image](https://poile-img.nos-eastchina1.126.net/oauth2/code-1.png)
+![image](./images/code-1.png)
 
 ##### 授权码模式步骤二（授权页面授权）
 
-![image](https://poile-img.nos-eastchina1.126.net/oauth2/code-2.png)
+![image](./images/code-2.png)
 
 ### 授权码模式步骤三（获取code）
 
-![](https://poile-img.nos-eastchina1.126.net/oauth2/code-3.png)
+![](./images/code-3.png)
 
 
 
 ### 授权码模式步骤四（根据code获取token）
 
-![](https://poile-img.nos-eastchina1.126.net/oauth2/code-4.png)
+![](./images/code-4.png)
 
 ### 简化模式
 与授权码模式类似，不过回调后携带的参数不是code，还是access_token,比授权码模式少了一步.
@@ -536,17 +536,24 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
 
 简化模式步骤一会跳转到认证中心的授权页面，这里为方便展示参数才用postman，get请求，应在浏览器直接打开（带对应参数），授权成功后会回调回调地址，并且会携带accessToken。
 
-![image](https://poile-img.nos-eastchina1.126.net/oauth2/%20implicit.png)
+![](./images/implicit2.png)
 
 ##### 步骤二（授权页面授权）
 
-![image](https://poile-img.nos-eastchina1.126.net/oauth2/code-2.png)
+![image](./images/code-2.png)
 
 ### 步骤三
 
-![](https://poile-img.nos-eastchina1.126.net/oauth2/%20Implicit2-2.png)
+![](./images/implicit-2.png)
 
 ### 刷新token模式
 
-![image](https://poile-img.nos-eastchina1.126.net/oauth2/refresh-token.png)
+![image](./images/refresh-token.png)
 
+
+
+# License
+
+[MIT](./LICENSE)
+
+Copyright (c) 2019-present Yaohw
