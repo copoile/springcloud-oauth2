@@ -120,7 +120,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         // 采用token转jwt，并添加一些自定义信息（token增强）
-        // 默认clientId + userId 使用MD5加密生成的token
+        // 默认使用随机UUID生成的token
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
         tokenEnhancerChain.setTokenEnhancers(
                 Arrays.asList(jwtAccessTokenConverter(),tokenEnhancer()));
