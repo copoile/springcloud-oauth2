@@ -14,9 +14,9 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
  * @create: 2019-10-08 10:04
  **/
 @Configuration
-//启用资源服务
+// 启用资源服务
 @EnableResourceServer
-//启用方法级权限控制
+// 启用方法级权限控制
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Log4j2
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
@@ -34,7 +34,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http    //配置需要保护的资源接口
-                .requestMatchers().antMatchers("/user","/remove","/test/need_token","/logout","/update","/test/need_admin","/test/scope")
+                .requestMatchers().antMatchers("/user","/test/need_token","/logout","/remove","/update","/test/need_admin","/test/scope")
                 .and().authorizeRequests().anyRequest().authenticated();
     }
 
