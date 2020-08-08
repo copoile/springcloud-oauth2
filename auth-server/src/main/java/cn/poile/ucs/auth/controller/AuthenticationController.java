@@ -67,11 +67,13 @@ public class AuthenticationController {
     }
 
     /**
-     * 退出时将token清空（使用RedisStore时就是删除掉对应缓存）
+     * 退出时将token清空（使用RedisStore时就是删除掉对应缓存
+     * 注: 这里的路径不能使用/logout，因为这个路径被LogoutFilter占用，配置文件配置了访问logout会转发到这里
+     * 所以/logout和remove都能登出
      * @param authorization
      * @return
      */
-    @DeleteMapping("/logout")
+    @DeleteMapping("/remove")
     public @ResponseBody String logout(@RequestHeader(value = "Authorization") String authorization) {
         String accessToken = authorization.substring(OAuth2AccessToken.BEARER_TYPE.length()).trim();
         consumerTokenServices.revokeToken(accessToken);
