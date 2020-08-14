@@ -1,5 +1,6 @@
 package cn.poile.ucs.auth.controller;
 
+import cn.poile.ucs.auth.service.ClientDetailsServiceImpl;
 import cn.poile.ucs.auth.vo.UserDetailImpl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Controller;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
+import java.util.*;
 
 /**
  * @author: yaohw
@@ -27,6 +31,9 @@ public class AuthenticationController {
 
     @Autowired
     private ConsumerTokenServices consumerTokenServices;
+
+    @Autowired
+    private ClientDetailsServiceImpl clientDetailsService;
 
     @Autowired
     private TokenStore tokenStore;
@@ -60,9 +67,23 @@ public class AuthenticationController {
         return "ok";
     }
 
+    /**
+     * 根据用户名和客户端id移除token
+     * @return
+     */
+    @GetMapping("/update2")
+    public @ResponseBody String updateUserInfo() {
+        Collection<OAuth2AccessToken> tokensByClientIdAndUserName = tokenStore.findTokensByClientIdAndUserName("yaohw", "yaohw");
+        if (tokensByClientIdAndUserName != null) {
+            tokensByClientIdAndUserName.forEach(t -> consumerTokenServices.revokeToken(t.getValue()));
+        }
+        return "ok";
+    }
+
     @GetMapping("/user")
-    public @ResponseBody Object userInfo(Principal user) {
+    public @ResponseBody Object userInfo(Principal user,Authentication authentication) {
         log.info("user:{}",user);
+        log.info("auth:{}", authentication);
         return  user;
     }
 
