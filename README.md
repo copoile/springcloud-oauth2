@@ -475,23 +475,18 @@ security:
       prefer-token-info: false
 ```
 
-#### （拦截token校验）OAuth2ClientAuthenticationProcessingFilter.java
+#### （拦截token校验）OAuth2AuthenticationProcessingFilter.java
 ```java
-@Override
-public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-        throws AuthenticationException, IOException, ServletException {
+public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException,
+			ServletException {
+		final boolean debug = logger.isDebugEnabled();
+		final HttpServletRequest request = (HttpServletRequest) req;
+		final HttpServletResponse response = (HttpServletResponse) res;
+		try {
 
-        OAuth2AccessToken accessToken;
-        try {
-        // 获取当前token，需要注意一点这个虽然用到restTemplate，但实际上这里并没有发起远程调度，这里restTemplate是OAuth2RestTemplate的实例
-        // 一路点进去你会发现他只是从上下文获取到accessToken
-        accessToken = restTemplate.getAccessToken();
-        } catch (OAuth2Exception e) {
-        BadCredentialsException bad = new BadCredentialsException("Could not obtain access token", e);
-        publish(new OAuth2AuthenticationFailureEvent(bad));
-        throw bad;
-        }
-        try {
+			Authentication authentication = tokenExtractor.extract(request);
+			Authentication authResult = authenticationManager.authenticate(authentication);
+			....略
         // 这步是校验token的关键，这里tokenServices是ResourceServerTokenServices实例，这里做怎么样的操作取决于注入的		
 	// ResourceServerTokenServices实例
         // 默认情况下ResourceServerTokenServices的实例是DefaultTokenServices
@@ -504,26 +499,13 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
         // 如果两者都配置了，优先UserInfoTokenServices
         // UserInfoTokenServices和RemoteTokenServices做的事都是远程调度认证中心相应的接口完成token的校验
         // 两者主要区别在于RemoteTokenServices需要配置clientId和clientSecret
-        // RemoteTokenServices中有这么一句话：Null Client ID or Client Secret detected. Endpoint that requires authentication will reject 	  // request with 401 error.
-        // 具体请查看RemoteTokenServices和UserInfoTokenServices
-        OAuth2Authentication result = tokenServices.loadAuthentication(accessToken.getValue());
-        if (authenticationDetailsSource!=null) {
-        request.setAttribute(OAuth2AuthenticationDetails.ACCESS_TOKEN_VALUE, accessToken.getValue());
-        request.setAttribute(OAuth2AuthenticationDetails.ACCESS_TOKEN_TYPE, accessToken.getTokenType());
-        result.setDetails(authenticationDetailsSource.buildDetails(request));
+        // RemoteTokenServices中有这么一句话：Null Client ID or Client Secret detected. Endpoint that requires authentication will reject 	  // request with 401 error.  // 具体请查看RemoteTokenServices和UserInfoTokenServices
+	// OAuth2AuthenticationManager.java
+        String token = (String) authentication.getPrincipal();
+	OAuth2Authentication auth = tokenServices.loadAuthentication(token);
         }
-        publish(new AuthenticationSuccessEvent(result));
-        return result;
-        }
-        catch (InvalidTokenException e) {
-        BadCredentialsException bad = new BadCredentialsException("Could not obtain user details from token", e);
-        publish(new OAuth2AuthenticationFailureEvent(bad));
-        throw bad;
-        }
-
         }
 ```
-
 
 
 ## postman接口测试截图
