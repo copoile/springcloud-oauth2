@@ -1,6 +1,6 @@
 package cn.poile.ucs.auth.provider;
 
-import cn.poile.ucs.auth.Token.MobileCodeAuthenticationToken;
+import cn.poile.ucs.auth.authentication.MobileCodeAuthenticationToken;
 import cn.poile.ucs.auth.constant.RedisConstant;
 import cn.poile.ucs.auth.service.UserDetailsServiceImpl;
 import lombok.extern.log4j.Log4j2;

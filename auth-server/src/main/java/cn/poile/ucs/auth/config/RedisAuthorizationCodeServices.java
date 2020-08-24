@@ -58,8 +58,8 @@ public class RedisAuthorizationCodeServices extends RandomValueAuthorizationCode
 
     /**
      * value序列化
-     * @param object
-     * @return
+     * @param object 序列化对象
+     * @return 序列化结果
      */
     private byte[] serialize(Object object) {
         return serializationStrategy.serialize(object);
@@ -67,8 +67,8 @@ public class RedisAuthorizationCodeServices extends RandomValueAuthorizationCode
 
     /**
      * key序列化
-     * @param string
-     * @return
+     * @param string key
+     * @return ket序列化结果
      */
     private byte[] serialize(String string) {
         return serializationStrategy.serialize(string);
@@ -76,8 +76,8 @@ public class RedisAuthorizationCodeServices extends RandomValueAuthorizationCode
 
     /**
      * key序列化
-     * @param object
-     * @return
+     * @param object 序列化对象
+     * @return key序列化结果
      */
     private byte[] serializeKey(Object object) {
         return serialize(prefix + object);
@@ -86,8 +86,8 @@ public class RedisAuthorizationCodeServices extends RandomValueAuthorizationCode
 
     /**
      * 反序列化
-     * @param bytes
-     * @return
+     * @param bytes 对象字节数组
+     * @return OAuth2Authentication
      */
     private OAuth2Authentication deserializeAuthentication(byte[] bytes) {
         return serializationStrategy.deserialize(bytes, OAuth2Authentication.class);
@@ -95,13 +95,11 @@ public class RedisAuthorizationCodeServices extends RandomValueAuthorizationCode
 
 
 
-
-
     /**
      * 将随机生成的授权码存到redis中
      *
-     * @param code
-     * @param authentication
+     * @param code 授权码
+     * @param authentication authentication
      * @return void
      */
     @Override
@@ -121,9 +119,9 @@ public class RedisAuthorizationCodeServices extends RandomValueAuthorizationCode
     }
 
     /**
-     * 取出授权码并删除授权码(权限码只能用一次，调试时可不删除，code就可多次使用)
+     * 取出授权码并删除授权码
      *
-     * @param code
+     * @param code 授权码
      * @return org.springframework.security.oauth2.provider.OAuth2Authentication
      */
     @Override
@@ -141,6 +139,5 @@ public class RedisAuthorizationCodeServices extends RandomValueAuthorizationCode
         }
         return deserializeAuthentication(bytes);
     }
-
 
 }

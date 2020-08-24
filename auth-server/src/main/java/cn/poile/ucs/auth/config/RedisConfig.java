@@ -32,7 +32,6 @@ public class RedisConfig {
         return template;
     }
 
-
     /**
      * 对hash类型的数据操作
      *

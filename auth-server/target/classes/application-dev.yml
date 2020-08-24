@@ -12,6 +12,42 @@ spring:
         max-active: 8
         max-wait: -1ms
         min-idle: 0
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/auth_db?useSSL=false
+    username: root
+    password: Ab452637!
+    druid:
+      initial-size: 5
+      min-idle: 5
+      maxActive: 20
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      filter:
+        slf4j:
+          enabled: true
+        wall:
+          enabled: true
+        stat:
+          enabled: true
+      connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
+      web-stat-filter:
+        enabled: true
+        url-pattern: "/*"
+        exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
+      stat-view-servlet:
+        url-pattern: "/druid/*"
+        reset-enable: false
+        login-username: admin
+        login-password: admin
 
 
 server:
@@ -26,22 +62,3 @@ eureka:
 
 ##开启日志DEBUG级别，便于查看调试信息
 logging.level.org.springframework.security: DEBUG
-
-
-##不需要安全拦截url配置
-ignore:
-  urls:
-  - /**/*.html
-  - /require
-  - /form
-  - /oauth/**
-  - /**/*.css
-  - /social
-  - /signin
-  - /signup
-  - /info
-  - /health
-  - /metrics/**
-  - /loggers/**
-  - /mobile/token
-  - /test

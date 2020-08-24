@@ -45,6 +45,7 @@ public class SysClientDetailService {
         grantTypes.add("authorization_code");
         grantTypes.add("implicit");
         grantTypes.add("mobile");
+        clientDetails.setAuthorities(new ArrayList<>());
         clientDetails.setAuthorizedGrantTypes(grantTypes);
         Set<String> sets = new HashSet<>(1);
         sets.add("http://www.baidu.com");

@@ -1,6 +1,6 @@
 package cn.poile.ucs.auth.granter;
 
-import cn.poile.ucs.auth.Token.MobileCodeAuthenticationToken;
+import cn.poile.ucs.auth.authentication.MobileCodeAuthenticationToken;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
