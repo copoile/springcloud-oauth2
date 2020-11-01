@@ -6,6 +6,7 @@ import cn.poile.ucs.auth.response.ApiResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
@@ -38,6 +39,11 @@ public class ExceptionHandle implements WebResponseExceptionTranslator<OAuth2Exc
     public ApiResponse handleException(Exception e) {
         log.error("未知异常:{0}", e);
         return new ApiResponse(SYSTEM_ERROR.getErrorCode(), SYSTEM_ERROR.getErrorMsg());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ApiResponse handleAccessDeniedException(Exception e) {
+        return new ApiResponse(ACCESS_DENIED.getErrorCode(), ACCESS_DENIED.getErrorMsg());
     }
 
     @ExceptionHandler(ApiException.class)
