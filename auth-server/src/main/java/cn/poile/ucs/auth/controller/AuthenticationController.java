@@ -1,5 +1,6 @@
 package cn.poile.ucs.auth.controller;
 
+import cn.poile.ucs.auth.response.ApiResponse;
 import cn.poile.ucs.auth.vo.UserDetailImpl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -21,9 +21,9 @@ import java.security.Principal;
  * @author: yaohw
  * @create: 2019-09-25 16:49
  **/
-@Controller
+@RestController
 @Log4j2
-public class AuthenticationController {
+public class AuthenticationController extends BaseController {
 
     @Autowired
     private ConsumerTokenServices consumerTokenServices;
@@ -46,11 +46,9 @@ public class AuthenticationController {
             Authentication userAuthentication = auth2Authentication.getUserAuthentication();
             OAuth2Authentication newOAuth2Authentication = null;
             if (userAuthentication instanceof UsernamePasswordAuthenticationToken) {
-                UserDetailImpl userDetails = (UserDetailImpl)userDetailsService.loadUserByUsername("yaohw");
-                userDetails.setUsername("yaohw2");
-                userDetails.setTest("test333");
+                UserDetailImpl userDetails = (UserDetailImpl) userDetailsService.loadUserByUsername("admin");
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
-                newOAuth2Authentication= new OAuth2Authentication(auth2Authentication.getOAuth2Request(),usernamePasswordAuthenticationToken);
+                newOAuth2Authentication = new OAuth2Authentication(auth2Authentication.getOAuth2Request(), usernamePasswordAuthenticationToken);
             }
             OAuth2AccessToken accessToken = tokenStore.getAccessToken(auth2Authentication);
             if (newOAuth2Authentication != null) {
@@ -61,9 +59,10 @@ public class AuthenticationController {
     }
 
     @GetMapping("/user")
-    public @ResponseBody Object userInfo(Principal user) {
+    public @ResponseBody
+    ApiResponse<Principal> userInfo(Principal user) {
         log.info("user:{}",user);
-        return  user;
+        return createResponse(user);
     }
 
     /**
@@ -107,6 +106,31 @@ public class AuthenticationController {
     public @ResponseBody String admin() {
         return "need_admin";
     }
+
+    /**
+     * 需要需要管理员2权限
+     *
+     * @return
+     */
+    @PreAuthorize("hasAuthority('admin2')")
+    @GetMapping("/test/need_admin2")
+    public @ResponseBody
+    String admin2() {
+        return "need_admin2";
+    }
+
+    /**
+     * 测试需要客户端的test权限
+     *
+     * @return
+     */
+    @PreAuthorize("#oauth2.clientHasRole('test')")
+    @GetMapping("/test/need_client_test")
+    public @ResponseBody
+    String test4() {
+        return "need_client_test";
+    }
+
 
     /**
      * 认证页面

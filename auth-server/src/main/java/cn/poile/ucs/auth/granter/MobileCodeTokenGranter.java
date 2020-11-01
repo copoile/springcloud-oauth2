@@ -1,7 +1,12 @@
 package cn.poile.ucs.auth.granter;
 
 import cn.poile.ucs.auth.authentication.MobileCodeAuthenticationToken;
-import org.springframework.security.authentication.*;
+import cn.poile.ucs.auth.constant.ErrorEnum;
+import cn.poile.ucs.auth.exception.CustomOauthTokenException;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authentication.AccountStatusException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
 import org.springframework.security.oauth2.provider.*;
@@ -49,10 +54,10 @@ public class MobileCodeTokenGranter extends AbstractTokenGranter {
         }
         catch (BadCredentialsException e) {
             // If the username/password are wrong the spec says we should send 400/invalid grant
-            throw new InvalidGrantException(e.getMessage());
+            throw new CustomOauthTokenException(ErrorEnum.BAD_MOBILE_CODE.getErrorCode(), ErrorEnum.BAD_MOBILE_CODE.getErrorMsg());
         }
         if (userAuth == null || !userAuth.isAuthenticated()) {
-            throw new InvalidGrantException("Could not authenticate mobile: " + mobile);
+            throw new CustomOauthTokenException(ErrorEnum.BAD_MOBILE_CODE.getErrorCode(), ErrorEnum.BAD_MOBILE_CODE.getErrorMsg());
         }
 
         OAuth2Request storedOAuth2Request = getRequestFactory().createOAuth2Request(client, tokenRequest);

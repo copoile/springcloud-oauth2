@@ -1,14 +1,11 @@
 package cn.poile.ucs.auth;
-import cn.poile.ucs.auth.config.IgnoreLogoutFilter;
+
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.context.annotation.Bean;
 
-import javax.servlet.Filter;
 
 
 /**
@@ -19,13 +16,11 @@ import javax.servlet.Filter;
 @SpringBootApplication
 @EnableDiscoveryClient
 @ServletComponentScan
+@MapperScan("cn.poile.ucs.auth.mapper")
 public class AuthServerApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(AuthServerApplication.class,args);
     }
-
-
-
 
 }

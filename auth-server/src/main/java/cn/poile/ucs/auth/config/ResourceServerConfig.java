@@ -1,5 +1,9 @@
 package cn.poile.ucs.auth.config;
 
+import cn.poile.ucs.auth.constant.ErrorEnum;
+import cn.poile.ucs.auth.response.ApiResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -7,6 +11,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 /**
  * 资源服务配置
@@ -33,8 +39,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
      */
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http    //配置需要保护的资源接口
-                .requestMatchers().antMatchers("/user","/test/need_token","/logout","/remove","/update","/test/need_admin","/test/scope")
+        http    // 配置需要保护的资源接口
+                .requestMatchers().antMatchers("/user", "/test/need_token", "/test/need_client_test", "/logout", "/remove", "/update", "/test/need_admin", "/test/scope")
                 .and().authorizeRequests().anyRequest().authenticated();
     }
 
@@ -45,8 +51,52 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
      */
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+        resources.authenticationEntryPoint(this.tokenErrorHandle())
+                .accessDeniedHandler(this.deniedErrorHandle());
         resources.resourceId(RESOURCE_ID).stateless(true);
     }
 
+
+    /**
+     * 权限不足处理
+     *
+     * @return
+     */
+    private AccessDeniedHandler deniedErrorHandle() {
+        return (request, response, accessDeniedException) -> {
+            String json = handleResponse(ErrorEnum.ACCESS_DENIED.getErrorCode(), ErrorEnum.ACCESS_DENIED.getErrorMsg());
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json; charset=utf-8");
+            response.getWriter().print(json);
+        };
+    }
+
+    /**
+     * token验证失败处理
+     *
+     * @return
+     */
+    private AuthenticationEntryPoint tokenErrorHandle() {
+        return (request, response, authException) -> {
+            String message = authException.getMessage();
+            String json;
+            // client中的resourceIds不包含当前服务的resourceId也会走这里
+            if (message != null && message.contains("resource id")) {
+                json = handleResponse(ErrorEnum.ACCESS_DENIED.getErrorCode(), ErrorEnum.ACCESS_DENIED.getErrorMsg());
+            } else {
+                json = handleResponse(ErrorEnum.CREDENTIALS_INVALID.getErrorCode(), ErrorEnum.CREDENTIALS_INVALID.getErrorMsg());
+            }
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json; charset=utf-8");
+            response.getWriter().print(json);
+        };
+    }
+
+    private String handleResponse(int code, String message) throws JsonProcessingException {
+        ApiResponse body = new ApiResponse();
+        body.setCode(code);
+        body.setMessage(message);
+        return new ObjectMapper().writeValueAsString(body);
+    }
 
 }

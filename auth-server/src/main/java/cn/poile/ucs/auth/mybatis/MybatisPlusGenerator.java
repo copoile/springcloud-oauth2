@@ -24,6 +24,7 @@ public class MybatisPlusGenerator {
         AutoGenerator autoGenerator = new AutoGenerator();
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
+        gc.setFileOverride(true);
         String projectPath = System.getProperty("user.dir");
         gc.setOutputDir( projectPath + "/auth-server/src/main/java");
         gc.setAuthor("yaohw");
@@ -64,7 +65,7 @@ public class MybatisPlusGenerator {
         focList.add(new FileOutConfig(templatePath) {
             @Override
             public String outputFile(TableInfo tableInfo) {
-                return projectPath + "auth-server/src/main/resources/mapper/"
+                return projectPath + "/auth-server/src/main/resources/mapper/"
                         + "/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
             }
         });
@@ -80,7 +81,7 @@ public class MybatisPlusGenerator {
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
-        strategy.setInclude("sys_user");
+        strategy.setInclude("sys_user_role_relation");
         // 设置
         // strategy.setInclude("")
         // 公共父类

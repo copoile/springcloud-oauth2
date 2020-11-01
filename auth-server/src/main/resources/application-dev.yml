@@ -17,7 +17,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/auth_db?useSSL=false
     username: root
-    password: Ab452637!
+    password: root
     druid:
       initial-size: 5
       min-idle: 5
@@ -62,3 +62,14 @@ eureka:
 
 ##开启日志DEBUG级别，便于查看调试信息
 logging.level.org.springframework.security: DEBUG
+
+# mybatis-plus配置，不可修改
+mybatis-plus:
+  mapper-locations:
+    - classpath:/mapper/*.xml
+  type-aliases-package: cn.poile.ucs.auth.entity
+  global-config:
+    db-config:
+      # 配置逻辑删除，1：是，0：否
+      logic-not-delete-value: 0
+      logic-delete-value: 1

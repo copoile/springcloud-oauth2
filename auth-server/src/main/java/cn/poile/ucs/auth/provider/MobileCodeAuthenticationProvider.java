@@ -2,7 +2,7 @@ package cn.poile.ucs.auth.provider;
 
 import cn.poile.ucs.auth.authentication.MobileCodeAuthenticationToken;
 import cn.poile.ucs.auth.constant.RedisConstant;
-import cn.poile.ucs.auth.service.UserDetailsServiceImpl;
+import cn.poile.ucs.auth.service.ISysUserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
@@ -25,7 +25,7 @@ public class MobileCodeAuthenticationProvider implements AuthenticationProvider,
 
     private StringRedisTemplate stringRedisTemplate;
 
-    private UserDetailsServiceImpl userDetailsService;
+    private ISysUserService userService;
 
     private MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 
@@ -48,21 +48,16 @@ public class MobileCodeAuthenticationProvider implements AuthenticationProvider,
         }
         String code = (String) authentication.getCredentials();
         if (code == null) {
-            log.error("缺失code参数");
             throw new BadCredentialsException(this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Missing code"));
         }
         String cacheCode = stringRedisTemplate.opsForValue().get(RedisConstant.SMS_CODE_PREFIX + mobile);
         if (cacheCode == null || !cacheCode.equals(code)) {
-            log.error("短信验证码错误");
             throw new BadCredentialsException(this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Invalid code"));
         }
-        //清除redis中的短信验证码
-        //stringRedisTemplate.delete(RedisConstant.SMS_CODE_PREFIX + mobile);
         UserDetails user;
         try {
-            user = userDetailsService.loadUserByMobile(mobile);
+            user = userService.loadUserByMobile(Long.parseLong(mobile));
         } catch (UsernameNotFoundException var6) {
-            log.info("手机号:" + mobile + "未查到用户信息");
             if (this.hideUserNotFoundExceptions) {
                 throw new BadCredentialsException(this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
             }
@@ -71,6 +66,8 @@ public class MobileCodeAuthenticationProvider implements AuthenticationProvider,
         check(user);
         MobileCodeAuthenticationToken authenticationToken = new MobileCodeAuthenticationToken(user, code, user.getAuthorities());
         authenticationToken.setDetails(authenticationToken.getDetails());
+        // 清除redis中的短信验证码
+        stringRedisTemplate.delete(RedisConstant.SMS_CODE_PREFIX + mobile);
         return authenticationToken;
     }
 
@@ -87,7 +84,7 @@ public class MobileCodeAuthenticationProvider implements AuthenticationProvider,
     /**
      * 账号禁用、锁定、超时校验
      *
-     * @param user
+     * @param user 用户
      */
     private void check(UserDetails user) {
         if (!user.isAccountNonLocked()) {
@@ -107,7 +104,7 @@ public class MobileCodeAuthenticationProvider implements AuthenticationProvider,
         this.hideUserNotFoundExceptions = hideUserNotFoundExceptions;
     }
 
-    public void setUserDetailsService(UserDetailsServiceImpl userDetailsService) {
-        this.userDetailsService = userDetailsService;
+    public void setUserDetailsService(ISysUserService userService) {
+        this.userService = userService;
     }
 }

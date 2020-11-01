@@ -7,6 +7,9 @@ package cn.poile.ucs.auth.constant;
  **/
 public class RedisConstant {
 
+    /**
+     * 短信验证码key前缀
+     */
     public final static String SMS_CODE_PREFIX = "sms:code:";
 
 }

@@ -1,10 +1,9 @@
 package cn.poile.ucs.auth.controller;
 
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
-import cn.poile.ucs.auth.controller.BaseController;
 
 /**
  * <p>
@@ -12,10 +11,20 @@ import cn.poile.ucs.auth.controller.BaseController;
  * </p>
  *
  * @author yaohw
- * @since 2020-08-16
+ * @since 2020-09-07
  */
 @RestController
 @RequestMapping("/sysUser")
 public class SysUserController extends BaseController {
+
+    /**
+     * 123456的密码密文
+     */
+    public static void main(String[] args) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encode = passwordEncoder.encode("123456");
+        // $2a$10$9ustgCuVxydWmgVVA7U9..vONYU8n8yrjJLkg5GsuBNCNHeGKbIOe
+        System.out.printf(encode);
+    }
 
 }

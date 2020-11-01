@@ -1,5 +1,6 @@
 package cn.poile.ucs.resources.config;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.Map;
  * @author: yaohw
  * @create: 2019-10-09 12:01
  **/
+@Log4j2
 public class CustomizePrincipalExtractor implements PrincipalExtractor {
 
     /**
@@ -19,6 +21,7 @@ public class CustomizePrincipalExtractor implements PrincipalExtractor {
      */
     @Override
     public Object extractPrincipal(Map<String, Object> map) {
+        log.info("get map:{}", map);
         // 这直接返回map本身，该map包含的认证中心对的principal的所有字段（key为字段名，value为字段值形式）
         // 这里也可以new一个user对象，将map对应字段值映射到user对象中返回user对象
         return map;
