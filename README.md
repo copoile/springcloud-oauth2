@@ -7,7 +7,10 @@
 > 如果大家有什么疑问或不懂的地方可以[issue](https://github.com/copoile/springcloud-oauth2/issues/new) 里提问。
 有什么说得不对或不合理的地方也欢迎指出。希望对你有所帮助呦~ ^_^
 
+# 分支说明
 
+目前分支有master和prod，master分支为快速上手，未配置数据库，内容偏教程流程理解，prod分支新建数据库相关表，并实现认证相关数据查询，同时实现统一异常处理，统一Api。
+prod分支-用户名：admin/123456，客户端：web/123456
 
 # 功能
 
