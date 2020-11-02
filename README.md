@@ -2,6 +2,8 @@
 
 用户名：admin/123456，客户端：web/123456
 
+数据库初始化sql在项目根目录下/auth_db.sql
+
 # 功能
 
 ```
@@ -22,7 +24,63 @@
 - 数据库建表及表数据查询
 ```
 
+# 数据库表
 
+* 权限表
+
+  | id          | 主键id   |
+  | :---------- | -------- |
+  | authority   | 权限     |
+  | description | 权限描述 |
+
+* 客户端表
+
+  | id                             | 主键id                                   |
+  | ------------------------------ | ---------------------------------------- |
+  | client_id                      | 客户端id                                 |
+  | client_secret                  | 客户端密钥                               |
+  | scopes                         | scopes，多个以英文逗号分隔               |
+  | resource_ids                   | 资源ids，以英文逗号分隔                  |
+  | grant_types                    | grant_types，以英文逗号分隔              |
+  | redirect_uris                  | 重定向uris，以英文逗号分隔               |
+  | auto_approve_scopes            | 授权码模式自动审批scopes，以英文逗号分隔 |
+  | access_token_validity_seconds  | accessToken有效秒数                      |
+  | refresh_token_validity_seconds | refreshToken有效秒数                     |
+  | authority_ids                  | 权限ids，以英文逗号分隔                  |
+
+* 角色表
+
+  | id          | 主键id   |
+  | ----------- | -------- |
+  | name        | 角色名称 |
+  | description | 描述     |
+
+* 用户表
+
+  | id        | 主键id               |
+  | --------- | -------------------- |
+  | username  | 用户名               |
+  | password  | 密码                 |
+  | enable    | 是否启用，1:是，0:否 |
+  | phone     | 手机号               |
+  | nick_name | 昵称                 |
+  | avatar    | 头像                 |
+
+* 用户角色关联表
+
+  | id          | 主键id |
+  | ----------- | ------ |
+  | sys_user_id | 用户id |
+  | sys_role_id | 角色id |
+
+* 角色权限关联表
+
+  | 主键id | id               |
+  | ------ | ---------------- |
+  | 角色id | sys_role_id      |
+  | 权限id | sys_authority_id |
+
+  
 
 # 测试样例
 
